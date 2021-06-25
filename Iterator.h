@@ -15,12 +15,15 @@ public:
     Iterator();
     Iterator(Node<T> *_p);
     ~Iterator();
-    Iterator &operator=(Node<T> *&rhs);
-    Iterator &operator=(Iterator<T> &rhs);
+    Iterator &operator=(const Node<T> *rhs);
+    Iterator &operator=(const Iterator<T> &rhs);
     Node<T> *operator++();
     Node<T> *operator--();
-    bool operator!=(Node<T> *rhs);
-    bool operator==(Node<T> *&rhs);
+    bool operator!=(const Node<T> *rhs);
+    bool operator!=(const Iterator<T> &rhs);
+    bool operator==(const Node<T> *rhs);
+    bool operator==(const Iterator<T> &rhs);
+
     T &operator*();
 };
 template <typename T>
@@ -30,13 +33,13 @@ template <typename T>
 Iterator<T>::Iterator(Node<T> *_p) : p{_p} {}
 
 template <typename T>
-Iterator<T> &Iterator<T>::operator=(Node<T> *&rhs)
+Iterator<T> &Iterator<T>::operator=(const Node<T> *rhs)
 {
     p = rhs;
 }
 
 template <typename T>
-Iterator<T> &Iterator<T>::operator=(Iterator<T> &rhs)
+Iterator<T> &Iterator<T>::operator=(const Iterator<T> &rhs)
 {
     (*this) = rhs;
     return (*this);
@@ -75,15 +78,27 @@ T &Iterator<T>::operator*()
 }
 
 template <typename T>
-bool Iterator<T>::operator!=(Node<T> *rhs)
+bool Iterator<T>::operator!=(const Node<T> *rhs)
 {
     return (p != rhs);
 }
 
 template <typename T>
-bool Iterator<T>::operator==(Node<T> *&rhs)
+bool Iterator<T>::operator==(const Node<T> *rhs)
 {
     return (p == rhs);
+}
+
+template <typename T>
+bool Iterator<T>::operator!=(const Iterator<T> &rhs)
+{
+    return (p != rhs.p);
+}
+
+template <typename T>
+bool Iterator<T>::operator==(const Iterator<T> &rhs)
+{
+    return (p == rhs.p);
 }
 
 #endif
