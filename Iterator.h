@@ -16,9 +16,10 @@ public:
     Iterator(Node<T> *_p);
     ~Iterator();
     Iterator &operator=(Node<T> *&rhs);
+    Iterator &operator=(Iterator<T> &rhs);
     Node<T> *operator++();
     Node<T> *operator--();
-    bool operator!=(Node<T> *&rhs);
+    bool operator!=(Node<T> *rhs);
     bool operator==(Node<T> *&rhs);
     T &operator*();
 };
@@ -32,6 +33,13 @@ template <typename T>
 Iterator<T> &Iterator<T>::operator=(Node<T> *&rhs)
 {
     p = rhs;
+}
+
+template <typename T>
+Iterator<T> &Iterator<T>::operator=(Iterator<T> &rhs)
+{
+    (*this) = rhs;
+    return (*this);
 }
 
 template <typename T>
@@ -63,11 +71,11 @@ T &Iterator<T>::operator*()
     if (p != nullptr)
         return p->data;
     else
-        throw std::out_of_range{"List is empty!"};
+        throw std::out_of_range{"No value to dereference!"};
 }
 
 template <typename T>
-bool Iterator<T>::operator!=(Node<T> *&rhs)
+bool Iterator<T>::operator!=(Node<T> *rhs)
 {
     return (p != rhs);
 }

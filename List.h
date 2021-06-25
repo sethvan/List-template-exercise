@@ -18,8 +18,8 @@ public:
     ~List();
     void push_front(T _data);
     void push_back(T _data);
-    Node<T> *begin();
-    Node<T> *end();
+    Node<T> *begin() const;
+    Node<T> *end() const;
     T &front();
     T &back();
     void clear();
@@ -40,7 +40,6 @@ List<T>::List(T _data) : head{new Node<T>{_data, nullptr, nullptr}} { tail = hea
 template <typename T>
 List<T>::~List()
 {
-    std::cout << "In Destructor" << std::endl;
     if (head != nullptr)
     {
         Node<T> *current = head;
@@ -151,13 +150,13 @@ void List<T>::display_all()
 }
 
 template <typename T>
-Node<T> *List<T>::begin()
+Node<T> *List<T>::begin() const
 {
     return head;
 }
 
 template <typename T>
-Node<T> *List<T>::end()
+Node<T> *List<T>::end() const
 {
     return tail->next;
 }
