@@ -18,6 +18,8 @@ public:
     ~List();
     void push_front(T _data);
     void push_back(T _data);
+    void pop_front();
+    void pop_back();
     Node<T> *begin() const;
     Node<T> *end() const;
     T &front();
@@ -177,5 +179,32 @@ T &List<T>::back()
         return tail->data;
     else
         throw std::out_of_range{"List is empty!"};
+}
+
+template <typename T>
+void List<T>::pop_front()
+{
+    if (head != nullptr)
+    {
+        Node<T> *temp = nullptr;
+        head->next->previous = nullptr;
+        temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
+template <typename T>
+void List<T>::pop_back()
+{
+    if (head != nullptr)
+    {
+        Node<T> *temp = nullptr;
+        tail->previous->next = tail->next;
+        tail->next->previous = tail->previous;
+        temp = tail;
+        tail = tail->previous;
+        delete temp;
+    }
 }
 #endif

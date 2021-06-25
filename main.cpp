@@ -18,7 +18,7 @@ int main()
     List<std::string> list;
 
     std::cout << std::boolalpha;
-    std::cout << "list.is_empty() = " << list.is_empty() << std::endl;
+    std::cout << "\n\nlist.is_empty() = " << list.is_empty() << std::endl;
 
     std::cout << "\nPushing one element to back..." << std::endl;
     list.push_back("eleventh");
@@ -40,6 +40,9 @@ int main()
 
     std::cout << "\ndisplaying list..." << std::endl;
     list.display_all();
+
+    std::cout << "\nList.front() = " << list.front() << std::endl;
+    std::cout << "List.back() = " << list.back() << std::endl;
 
     std::cout << "\nsetting iterator it to find element \"eleventh\"..." << std::endl;
     Iterator<std::string> it = find(list.begin(), list.end(), std::string("eleventh"));
@@ -66,10 +69,29 @@ int main()
     --it2;
     std::cout << "decrementing it2 and displaying new element: \"" << *it2 << "\"" << std::endl;
 
-    std::cout << "\nlist.is_empty() = " << list.is_empty() << std::endl;
     std::cout << "\nlist.size() = " << list.size() << std::endl;
     std::cout << "\ndisplaying list..." << std::endl;
     list.display_all();
+
+    std::cout << "\nexecuting pop_back() method once and displaying list..." << std::endl;
+    list.pop_back();
+    list.display_all();
+    std::cout << "\nexecuting pop_back() method twice more and displaying list..." << std::endl;
+    list.pop_back();
+    list.pop_back();
+    list.display_all();
+
+    std::cout << "\nlist.size() = " << list.size() << std::endl;
+
+    std::cout << "\n\nexecuting pop_front() method once and displaying list..." << std::endl;
+    list.pop_front();
+    list.display_all();
+
+    std::cout << "\nexecuting pop_front() method twice more and displaying list..." << std::endl;
+    list.pop_front();
+    list.pop_front();
+    list.display_all();
+
     std::cout << "\nClearing list..." << std::endl;
     list.clear();
 
