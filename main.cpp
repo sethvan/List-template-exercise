@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "List.h"
+#include "Iterator.h"
 
 int main()
 {
@@ -18,6 +19,18 @@ int main()
     list.push_back("seventh");
     list.push_front("eighth");
     list.push_back("ninth");
+
+    Iterator<std::string> it = list.begin();
+    Iterator<std::string> it1 = list.end();
+
+    --it1;
+    std::cout << "Element at iterator0 = " << *it << std::endl;
+    ++it;
+    std::cout << "Element at iterator1 = " << *it1 << std::endl;
+    std::cout << "Element at iterator0 = " << *it << std::endl;
+    ++it;
+    std::cout << "Element at iterator1 = " << *it1 << std::endl;
+    std::cout << "Element at iterator0 = " << *it << std::endl;
 
     std::cout << "list.is_empty() = " << list.is_empty() << std::endl;
     std::cout << "list.size() = " << list.size() << std::endl;

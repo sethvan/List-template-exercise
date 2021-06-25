@@ -2,20 +2,17 @@
 #define LIST_H_
 
 #include <iostream>
+#include "Node.h"
+#include "Iterator.h"
 
 template <typename T>
 class List
 {
-    struct Node
-    {
-        T data;
-        Node *previous;
-        Node *next;
-    };
+    friend class Iterator<T>;
 
 private:
-    Node *head;
-    Node *tail;
+    Node<T> *head;
+    Node<T> *tail;
 
 public:
     List();
@@ -23,6 +20,10 @@ public:
     ~List();
     void push_front(T _data);
     void push_back(T _data);
+    Node<T> *begin();
+    Node<T> *end();
+    T &front();
+    T &back();
     void clear();
     bool is_empty();
     size_t size();
@@ -36,7 +37,7 @@ List<T>::List()
 }
 
 template <typename T>
-List<T>::List(T _data) : head{new Node{_data, nullptr, nullptr}} { tail = head; }
+List<T>::List(T _data) : head{new Node<T>{_data, nullptr, nullptr}} { tail = head; }
 
 template <typename T>
 List<T>::~List()
@@ -44,11 +45,11 @@ List<T>::~List()
     std::cout << "In Destructor" << std::endl;
     if (head != nullptr)
     {
-        Node *current = head;
+        Node<T> *current = head;
 
         while (current != nullptr)
         {
-            Node *previous = current;
+            Node<T> *previous = current;
             current = current->next;
             delete previous;
         }
@@ -60,12 +61,12 @@ void List<T>::push_front(T _data)
 {
     if (head == nullptr)
     {
-        head = new Node(_data, nullptr, nullptr);
+        head = new Node<T>(_data, nullptr, nullptr);
         tail = head;
     }
     else
     {
-        Node *node = new Node(_data, nullptr, head);
+        Node<T> *node = new Node<T>(_data, nullptr, head);
         head->previous = node;
         head = node;
     }
@@ -76,12 +77,12 @@ void List<T>::push_back(T _data)
 {
     if (tail == nullptr)
     {
-        tail = new Node(_data, nullptr, nullptr);
+        tail = new Node<T>(_data, nullptr, nullptr);
         head = tail;
     }
     else
     {
-        Node *node = new Node(_data, tail, nullptr);
+        Node<T> *node = new Node<T>(_data, tail, nullptr);
         tail->next = node;
         tail = node;
     }
@@ -90,17 +91,17 @@ void List<T>::push_back(T _data)
 template <typename T>
 void List<T>::clear()
 {
-    Node *current = head;
+    Node<T> *current = head;
 
     while (current != nullptr)
     {
-        Node *previous = current;
+        Node<T> *previous = current;
         current = current->next;
         delete previous;
     }
     head = nullptr;
     tail = nullptr;
-    std::cout << "Cleared!" << std::endl;
+    std::cout << "List cleared!" << std::endl;
 }
 
 template <typename T>
@@ -117,7 +118,7 @@ size_t List<T>::size()
     else
     {
         size_t count = 0;
-        Node *current = head;
+        Node<T> *current = head;
 
         while (current != nullptr)
         {
@@ -133,7 +134,7 @@ void List<T>::display_all()
 {
     if (head != nullptr)
     {
-        Node *current = head;
+        Node<T> *current = head;
         printf("List = [ ");
         while (current != nullptr)
         {
@@ -142,5 +143,35 @@ void List<T>::display_all()
         }
         std::cout << std::endl;
     }
+}
+
+template <typename T>
+Node<T> *List<T>::begin()
+{
+    return head;
+}
+
+template <typename T>
+Node<T> *List<T>::end()
+{
+    return tail->next;
+}
+
+template <typename T>
+T &List<T>::front()
+{
+    if (head != nullptr)
+        return head->data;
+    else
+        throw std::out_of_range{"List is empty!"};
+}
+
+template <typename T>
+T &List<T>::back()
+{
+    if (head != nullptr)
+        return tail->data;
+    else
+        throw std::out_of_range{"List is empty!"};
 }
 #endif
