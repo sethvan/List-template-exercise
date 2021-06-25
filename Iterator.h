@@ -10,7 +10,6 @@ class Iterator
 {
 private:
     Node<T> *p;
-    List<T> list;
 
 public:
     Iterator();
@@ -53,8 +52,6 @@ Node<T> *Iterator<T>::operator--()
 {
     if (p->previous == nullptr)
         throw std::out_of_range{"Iterator out of bounds!"};
-    else if (p == List<T>::tail->next)
-        p = List<T>::tail;
     else
         p = p->previous;
     return p;

@@ -8,8 +8,6 @@
 template <typename T>
 class List
 {
-    friend class Iterator<T>;
-
 private:
     Node<T> *head;
     Node<T> *tail;
@@ -63,6 +61,9 @@ void List<T>::push_front(T _data)
     {
         head = new Node<T>(_data, nullptr, nullptr);
         tail = head;
+        tail->next = new Node<T>;
+        tail->next->previous = tail;
+        tail->next->next = nullptr;
     }
     else
     {
@@ -79,10 +80,14 @@ void List<T>::push_back(T _data)
     {
         tail = new Node<T>(_data, nullptr, nullptr);
         head = tail;
+        tail->next = new Node<T>;
+        tail->next->previous = tail;
+        tail->next->next = nullptr;
     }
     else
     {
-        Node<T> *node = new Node<T>(_data, tail, nullptr);
+        Node<T> *node = new Node<T>(_data, tail, tail->next);
+        tail->next->previous = node;
         tail->next = node;
         tail = node;
     }
@@ -120,7 +125,7 @@ size_t List<T>::size()
         size_t count = 0;
         Node<T> *current = head;
 
-        while (current != nullptr)
+        while (current->next != nullptr)
         {
             ++count;
             current = current->next;
@@ -136,9 +141,9 @@ void List<T>::display_all()
     {
         Node<T> *current = head;
         printf("List = [ ");
-        while (current != nullptr)
+        while (current->next != nullptr)
         {
-            std::cout << current->data << (current->next == nullptr ? " ]" : ", ");
+            std::cout << current->data << (current->next->next == nullptr ? " ]" : ", ");
             current = current->next;
         }
         std::cout << std::endl;

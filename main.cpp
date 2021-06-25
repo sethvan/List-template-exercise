@@ -13,7 +13,7 @@ int main()
     list.push_back("first");
     list.push_back("second");
     list.push_front("third");
-    list.push_front("fourth");
+    list.push_back("fourth");
     list.push_front("fifth");
     list.push_back("sixth");
     list.push_back("seventh");
@@ -29,8 +29,11 @@ int main()
     std::cout << "Element at iterator1 = " << *it1 << std::endl;
     std::cout << "Element at iterator0 = " << *it << std::endl;
     ++it;
+    --it1;
     std::cout << "Element at iterator1 = " << *it1 << std::endl;
     std::cout << "Element at iterator0 = " << *it << std::endl;
+    --it1;
+    std::cout << "Element at iterator1 = " << *it1 << std::endl;
 
     std::cout << "list.is_empty() = " << list.is_empty() << std::endl;
     std::cout << "list.size() = " << list.size() << std::endl;
