@@ -15,7 +15,7 @@ public:
     Iterator();
     Iterator(Node<T> *_p);
     ~Iterator();
-    Iterator &operator=(const Node<T> *rhs);
+    Iterator &operator=(const Node<T> *&rhs);
     Iterator &operator=(const Iterator<T> &rhs);
     Node<T> *operator++();
     Node<T> *operator--();
@@ -33,7 +33,7 @@ template <typename T>
 Iterator<T>::Iterator(Node<T> *_p) : p{_p} {}
 
 template <typename T>
-Iterator<T> &Iterator<T>::operator=(const Node<T> *rhs)
+Iterator<T> &Iterator<T>::operator=(const Node<T> *&rhs)
 {
     p = rhs;
 }

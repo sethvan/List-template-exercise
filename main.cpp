@@ -69,6 +69,11 @@ int main()
     --it2;
     std::cout << "decrementing it2 and displaying new element: \"" << *it2 << "\"" << std::endl;
 
+    while (it1 != it2)
+        ++it1;
+    std::cout << "\nperformed: while (it1 != it2) ++it1; ..." << std::endl;
+    std::cout << "(it1 == it2) = " << (it1 == it2) << std::endl;
+
     std::cout << "\nlist.size() = " << list.size() << std::endl;
     std::cout << "\ndisplaying list..." << std::endl;
     list.display_all();
