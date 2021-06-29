@@ -3,18 +3,21 @@
 
 #include <iostream>
 #include "Node.h"
-#include "Iterator.h"
 
 template <typename T>
 class List
 {
+    template <typename U>
+    friend std::ostream &operator<<(std::ostream &os, const List<U> &rhs);
+
 private:
     Node<T> *head;
     Node<T> *tail;
+    void *parent;
 
 public:
-    List();
-    List(T _data);
+    List(void *_parent = nullptr);
+    List(T _data, void *_parent = nullptr);
     ~List();
     void push_front(T _data);
     void push_back(T _data);
@@ -30,19 +33,26 @@ public:
     void display_all();
 };
 template <typename T>
-List<T>::List()
+List<T>::List(void *_parent) : parent{_parent}
 {
     head = nullptr;
     tail = nullptr;
 }
 
 template <typename T>
-List<T>::List(T _data) : head{new Node<T>{_data, nullptr, nullptr}} { tail = head; }
+List<T>::List(T _data, void *_parent)
+    : head{new Node<T>{_data, nullptr, nullptr}}, parent{_parent}
+{
+    tail = head;
+    tail->next = new Node<T>;
+    tail->next->previous = tail;
+    tail->next->next = nullptr;
+}
 
 template <typename T>
 List<T>::~List()
 {
-    if (head != nullptr)
+    if (head != nullptr && parent == nullptr)
     {
         Node<T> *current = head;
 
@@ -88,8 +98,8 @@ void List<T>::push_back(T _data)
     else
     {
         Node<T> *node = new Node<T>(_data, tail, tail->next);
-        tail->next->previous = node;
         tail->next = node;
+        node->next->previous = node;
         tail = node;
     }
 }
@@ -207,4 +217,21 @@ void List<T>::pop_back()
         delete temp;
     }
 }
+
+template <typename U>
+std::ostream &operator<<(std::ostream &os, const List<U> &rhs)
+{
+    if (rhs.head != nullptr)
+    {
+        Node<U> *current = rhs.head;
+        printf("[ ");
+        while (current->next != nullptr)
+        {
+            os << current->data << (current->next->next == nullptr ? " ]" : ", ");
+            current = current->next;
+        }
+    }
+    return os;
+}
+
 #endif

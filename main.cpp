@@ -15,7 +15,13 @@ Iterator<T> find(Node<T> *begin, Node<T> *end, T value)
 
 int main()
 {
+    std::string word = "word";
     List<std::string> list;
+    // List<std::string> testList;
+
+
+    // testList.push_back("word2");
+    // testList.push_back("word3");
 
     std::cout << std::boolalpha;
     std::cout << "\n\nlist.is_empty() = " << list.is_empty() << std::endl;

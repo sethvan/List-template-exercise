@@ -36,6 +36,7 @@ template <typename T>
 Iterator<T> &Iterator<T>::operator=(const Node<T> *&rhs)
 {
     p = rhs;
+    return (*this);
 }
 
 template <typename T>
