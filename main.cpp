@@ -107,7 +107,7 @@ int main()
 
     std::cout << "\nlist.size() = " << list.size() << std::endl;
 
-    std::cout << "\n\nExecuting pop_front() method once and displaying list..." << std::endl;
+    std::cout << "\nExecuting pop_front() method once and displaying list..." << std::endl;
     list.pop_front();
     list.display_all();
 
