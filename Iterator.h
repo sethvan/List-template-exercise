@@ -15,8 +15,8 @@ public:
     Iterator();
     Iterator(Node<T> *_p);
     ~Iterator();
-    Iterator &operator=(const Node<T> *&rhs);
-    Iterator &operator=(const Iterator<T> &rhs);
+    Iterator<T> &operator=(const Node<T> *&rhs);
+    Iterator<T> operator=(Iterator<T> rhs);
     Node<T> *operator++();
     Node<T> *operator--();
     bool operator!=(const Node<T> *rhs);
@@ -40,7 +40,7 @@ Iterator<T> &Iterator<T>::operator=(const Node<T> *&rhs)
 }
 
 template <typename T>
-Iterator<T> &Iterator<T>::operator=(const Iterator<T> &rhs)
+Iterator<T> Iterator<T>::operator=(Iterator<T> rhs)
 {
     (*this) = rhs;
     return (*this);

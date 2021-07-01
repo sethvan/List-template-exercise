@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "Node.h"
+#include "Iterator.h"
 
 template <typename T>
 class List
@@ -23,14 +24,16 @@ public:
     void push_back(T _data);
     void pop_front();
     void pop_back();
-    Node<T> *begin() const;
-    Node<T> *end() const;
+    Iterator<T> begin();
+    Iterator<T> end();
     T &front();
     T &back();
     void clear();
     bool is_empty();
     size_t size();
     void display_all();
+    void swap(List<T> &rhs) noexcept;
+    void sort() noexcept;
 };
 template <typename T>
 List<T>::List(void *_parent) : parent{_parent}
@@ -162,18 +165,6 @@ void List<T>::display_all()
 }
 
 template <typename T>
-Node<T> *List<T>::begin() const
-{
-    return head;
-}
-
-template <typename T>
-Node<T> *List<T>::end() const
-{
-    return tail->next;
-}
-
-template <typename T>
 T &List<T>::front()
 {
     if (head != nullptr)
@@ -232,6 +223,83 @@ std::ostream &operator<<(std::ostream &os, const List<U> &rhs)
         }
     }
     return os;
+}
+
+template <typename T>
+Iterator<T> List<T>::begin()
+{
+    return Iterator<T>{head};
+}
+
+template <typename T>
+Iterator<T> List<T>::end()
+{
+    return Iterator<T>{tail->next};
+}
+
+template <typename T>
+void List<T>::sort() noexcept
+{
+    List<T> sorted{head->data};
+    Node<T> *current = head->next;
+
+    while (current->next != nullptr)
+    {
+        Node<T> *node = new Node<T>{current->data, nullptr, nullptr};
+        Node<T> *p = sorted.head;
+        Node<T> *previous = p;
+        if (node->data > p->data)
+        {
+            while (*p < *node && p->next->next != nullptr)
+            {
+                previous = p;
+                p = p->next;
+            }
+            if (p->next->next == nullptr && *p < *node)
+            {
+                node->next = p->next;
+                node->next->previous = node;
+                p->next = node;
+                node->previous = p;
+                sorted.tail = node;
+            }
+            else
+            {
+                node->next = p;
+                p->previous = node;
+                previous->next = node;
+                node->previous = previous;
+            }
+        }
+        else
+        {
+            node->next = sorted.head;
+            sorted.head = node;
+        }
+        current = current->next;
+    }
+    swap(sorted);
+}
+
+template <typename T>
+void List<T>::swap(List<T> &rhs) noexcept
+{
+    Node<T> *tempHead;
+    Node<T> *tempTail;
+    tempHead = head;
+    tempTail = tail;
+    head = rhs.head;
+    tail = rhs.tail;
+    rhs.head = tempHead;
+    rhs.tail = tempTail;
+    tempHead = nullptr;
+    tempTail = nullptr;
+}
+
+template <typename T>
+void swap(List<T> &one, List<T> &other) noexcept
+{
+    one.swap(other);
 }
 
 #endif
