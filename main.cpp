@@ -16,7 +16,6 @@ Iterator<T> find(Iterator<T> begin, Iterator<T> end, T value)
 
 int main()
 {
-    std::string word = "word";
     List<std::string> list;
 
     std::cout << std::boolalpha;
