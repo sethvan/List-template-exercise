@@ -3,29 +3,38 @@
 
 #include "Node.h"
 #include <stdexcept>
-#include "List.h"
+#include <iterator>
+#include <list>
 
 template <typename T>
-class Iterator
+struct Iterator
 {
+    using value_type = T;
+    using difference_type = std::iter_difference_t<std::list<T>>;
+    using pointer = Node<T>*; 
+    using reference = T&;
+    using iterator_category = std::bidirectional_iterator_tag;
+    
+
 private:
     Node<T> *p;
 
 public:
     Iterator();
     Iterator(Node<T> *_p);
-    ~Iterator();
-    Iterator<T> &operator=(const Node<T> *&rhs);
-    Iterator<T> operator=(Iterator<T> rhs);
-    Node<T> *operator++();
-    Node<T> *operator--();
-    bool operator!=(const Node<T> *rhs);
-    bool operator!=(const Iterator<T> &rhs);
-    bool operator==(const Node<T> *rhs);
-    bool operator==(const Iterator<T> &rhs);
+    ~Iterator() = default;
+    
+    Iterator<T>& operator++();
+    Iterator<T> operator++(int);
+    Iterator<T>& operator--();
+    Iterator<T> operator--(int);
+    bool operator!=(const Iterator<T> &rhs) const;
+    bool operator==(const Iterator<T> &rhs) const;
+    T &operator*() const;
 
-    T &operator*();
+   
 };
+
 template <typename T>
 Iterator<T>::Iterator() : p{nullptr} {}
 
@@ -33,73 +42,64 @@ template <typename T>
 Iterator<T>::Iterator(Node<T> *_p) : p{_p} {}
 
 template <typename T>
-Iterator<T> &Iterator<T>::operator=(const Node<T> *&rhs)
+Iterator<T>& Iterator<T>::operator++()
 {
-    p = rhs;
-    return (*this);
-}
-
-template <typename T>
-Iterator<T> Iterator<T>::operator=(Iterator<T> rhs)
-{
-    (*this) = rhs;
-    return (*this);
-}
-
-template <typename T>
-Iterator<T>::~Iterator() {}
-
-template <typename T>
-Node<T> *Iterator<T>::operator++()
-{
-    if (p == nullptr)
-        throw std::out_of_range{"Iterator past .end()!"};
-    else
+    if (p->next != nullptr)
+    {  
         p = p->next;
-    return p;
+        return (*this);       
+    }
+    else
+        throw std::out_of_range{"Iterator past .end()!"};
+        
 }
 
 template <typename T>
-Node<T> *Iterator<T>::operator--()
+Iterator<T> Iterator<T>::operator++(int)
+{
+    auto temp = (*this);
+    p = p->next;
+    return temp;
+}
+
+template <typename T>
+Iterator<T>& Iterator<T>::operator--()
 {
     if (p->previous == nullptr)
         throw std::out_of_range{"Iterator out of bounds!"};
     else
         p = p->previous;
-    return p;
+    return (*this);
 }
 
 template <typename T>
-T &Iterator<T>::operator*()
+Iterator<T> Iterator<T>::operator--(int)
 {
-    if (p != nullptr)
+    auto temp = (*this);
+    p = p->previous;
+    return temp;
+}
+
+template <typename T>
+T &Iterator<T>::operator*() const
+{
+    if (p != nullptr && p->next != nullptr)
         return p->data;
     else
         throw std::out_of_range{"No value to dereference!"};
 }
 
 template <typename T>
-bool Iterator<T>::operator!=(const Node<T> *rhs)
-{
-    return (p != rhs);
-}
-
-template <typename T>
-bool Iterator<T>::operator==(const Node<T> *rhs)
-{
-    return (p == rhs);
-}
-
-template <typename T>
-bool Iterator<T>::operator!=(const Iterator<T> &rhs)
+bool Iterator<T>::operator!=(const Iterator<T>& rhs) const
 {
     return (p != rhs.p);
 }
 
 template <typename T>
-bool Iterator<T>::operator==(const Iterator<T> &rhs)
+bool Iterator<T>::operator==(const Iterator<T>& rhs) const
 {
     return (p == rhs.p);
 }
+
 
 #endif

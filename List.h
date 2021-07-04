@@ -250,12 +250,12 @@ void List<T>::sort() noexcept
         Node<T> *previous = p;
         if (node->data > p->data)
         {
-            while (*p < *node && p->next->next != nullptr)
+            while (p->data < node->data && p->next->next != nullptr)
             {
                 previous = p;
                 p = p->next;
             }
-            if (p->next->next == nullptr && *p < *node)
+            if (p->next->next == nullptr && p->data < node->data)
             {
                 node->next = p->next;
                 node->next->previous = node;

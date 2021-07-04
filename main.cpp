@@ -4,16 +4,6 @@
 #include "Iterator.h"
 #include <algorithm>
 
-template <typename T>
-Iterator<T> find(Iterator<T> begin, Iterator<T> end, T value)
-{
-    Iterator<T> it = begin;
-    while (it != end && *it != value)
-        ++it;
-
-    return it;
-}
-
 int main()
 {
     std::string word = "word";
@@ -47,7 +37,7 @@ int main()
     std::cout << "List.back() = " << list.back() << std::endl;
 
     std::cout << "\nSetting iterator it to find element \"eleventh\"..." << std::endl;
-    Iterator<std::string> it = find(list.begin(), list.end(), std::string("eleventh"));
+    auto it = std::find(list.begin(), list.end(), std::string("eleventh"));
     std::cout << "Changing value of element at it : *it = \"fourth\"\n"
               << std::endl;
     *it = "fourth";
