@@ -6,7 +6,6 @@
 
 int main()
 {
-    std::string word = "word";
     List<std::string> list;
 
     std::cout << std::boolalpha;
