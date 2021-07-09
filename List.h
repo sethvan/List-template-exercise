@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Node.h"
 #include "Iterator.h"
+#include <utility>
 
 template <typename T>
 class List
@@ -19,6 +20,10 @@ private:
 public:
     List(void *_parent = nullptr);
     List(T _data, void *_parent = nullptr);
+    List(const List& rhs);
+    List(List&& rhs) noexcept;
+    List& operator=(const List& rhs);
+    List& operator=(List&& rhs) noexcept;
     ~List();
     void push_front(T _data);
     void push_back(T _data);
@@ -34,22 +39,64 @@ public:
     void display_all();
     void swap(List<T> &rhs) noexcept;
     void sort() noexcept;
+    void remove(Iterator<T> &it);
 };
 template <typename T>
 List<T>::List(void *_parent) : parent{_parent}
 {
     head = nullptr;
     tail = nullptr;
+    //std::cout << "Default constructor called" << std::endl;
 }
 
 template <typename T>
 List<T>::List(T _data, void *_parent)
-    : head{new Node<T>{_data, nullptr, nullptr}}, parent{_parent}
+    : head{new Node<T>{std::move(_data), nullptr, nullptr}}, parent{_parent}
 {
     tail = head;
     tail->next = new Node<T>;
     tail->next->previous = tail;
     tail->next->next = nullptr;
+    std::cout << "Modified Default constructor called" << std::endl;
+}
+
+template <typename T>
+List<T>::List(const List& rhs) : List{}
+{
+    *this = rhs;
+    std::cout << "Copy constructed " << size() << " elements" << std::endl;
+}
+
+template <typename T>
+List<T>::List(List&& rhs) noexcept : List{}
+{
+    swap(rhs);
+    std::cout << "Move constructed " << size() << " elements" << std::endl;
+}
+
+template <typename T>
+List<T>& List<T>::operator=(const List& rhs)
+{
+    List copy {};
+    Node<T>* current = rhs.head;
+    while(current->next != nullptr)
+    {
+        copy.push_back(current->data);
+        current = current->next;
+    }
+    current = nullptr;
+    
+    swap(copy);
+    std::cout << "Copy assigned " << size() << " elements" << std::endl;
+    return *this;
+}
+
+template <typename T>
+List<T>& List<T>::operator=(List&& rhs) noexcept
+{
+    swap(rhs);
+    std::cout << "Move assigned " << size() << " elements" << std::endl;
+    return *this;
 }
 
 template <typename T>
@@ -73,7 +120,7 @@ void List<T>::push_front(T _data)
 {
     if (head == nullptr)
     {
-        head = new Node<T>(_data, nullptr, nullptr);
+        head = new Node<T>(std::move(_data), nullptr, nullptr);
         tail = head;
         tail->next = new Node<T>;
         tail->next->previous = tail;
@@ -81,7 +128,7 @@ void List<T>::push_front(T _data)
     }
     else
     {
-        Node<T> *node = new Node<T>(_data, nullptr, head);
+        Node<T> *node = new Node<T>(std::move(_data), nullptr, head);
         head->previous = node;
         head = node;
     }
@@ -92,7 +139,7 @@ void List<T>::push_back(T _data)
 {
     if (tail == nullptr)
     {
-        tail = new Node<T>(_data, nullptr, nullptr);
+        tail = new Node<T>(std::move(_data), nullptr, nullptr);
         head = tail;
         tail->next = new Node<T>;
         tail->next->previous = tail;
@@ -100,7 +147,7 @@ void List<T>::push_back(T _data)
     }
     else
     {
-        Node<T> *node = new Node<T>(_data, tail, tail->next);
+        Node<T> *node = new Node<T>(std::move(_data), tail, tail->next);
         tail->next = node;
         node->next->previous = node;
         tail = node;
@@ -198,6 +245,7 @@ void List<T>::pop_front()
 template <typename T>
 void List<T>::pop_back()
 {
+    printf("after -1\n");
     if (head != nullptr)
     {
         Node<T> *temp = nullptr;
@@ -242,17 +290,16 @@ void List<T>::sort() noexcept
 {
     List<T> sorted{head->data};
     Node<T> *current = head->next;
+    Node<T> *p;
 
     while (current->next != nullptr)
     {
         Node<T> *node = new Node<T>{current->data, nullptr, nullptr};
-        Node<T> *p = sorted.head;
-        Node<T> *previous = p;
+        p = sorted.head;
         if (node->data > p->data)
         {
             while (p->data < node->data && p->next->next != nullptr)
             {
-                previous = p;
                 p = p->next;
             }
             if (p->next->next == nullptr && p->data < node->data)
@@ -266,14 +313,15 @@ void List<T>::sort() noexcept
             else
             {
                 node->next = p;
-                p->previous = node;
-                previous->next = node;
-                node->previous = previous;
+                node->previous = p->previous;
+                p->previous->next = node;
+                p->previous = node; 
             }
         }
         else
         {
             node->next = sorted.head;
+            sorted.head->previous = node;
             sorted.head = node;
         }
         current = current->next;
@@ -282,18 +330,10 @@ void List<T>::sort() noexcept
 }
 
 template <typename T>
-void List<T>::swap(List<T> &rhs) noexcept
+void List<T>::swap(List &rhs) noexcept
 {
-    Node<T> *tempHead;
-    Node<T> *tempTail;
-    tempHead = head;
-    tempTail = tail;
-    head = rhs.head;
-    tail = rhs.tail;
-    rhs.head = tempHead;
-    rhs.tail = tempTail;
-    tempHead = nullptr;
-    tempTail = nullptr;
+    std::swap(head, rhs.head);
+    std::swap(tail, rhs.tail);   
 }
 
 template <typename T>
@@ -302,4 +342,18 @@ void swap(List<T> &one, List<T> &other) noexcept
     one.swap(other);
 }
 
+template <typename T>
+void List<T>::remove(Iterator<T> &it)
+{
+    Node<T>* node = it.get_p();
+    if(node->previous != nullptr && node->next!=nullptr)
+    {
+        node->next->previous = node->previous;
+        node->previous->next = node->next;
+        delete node;
+    }
+    else
+       pop_front();
+    
+}
 #endif

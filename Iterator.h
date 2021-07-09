@@ -4,6 +4,7 @@
 #include "Node.h"
 #include <iterator>
 #include <cassert>
+#include "List.h"
 
 
 template <typename T>
@@ -28,6 +29,7 @@ public:
     bool operator!=(const Iterator<T> &rhs) const;
     bool operator==(const Iterator<T> &rhs) const;
     T &operator*() const;
+    Node<T>* get_p(){return p;}
 
    
 };
