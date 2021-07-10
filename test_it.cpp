@@ -72,13 +72,13 @@ int main()
     std::cout << "myList is sorted = " << std::ranges::is_sorted(myList) << std::endl;
 
     
-    List<std::string> strList = makeList(100);//due to NRVO, only the default constructors are called in this instance and from within the function
+    //List<std::string> strList = makeList(100);//due to NRVO, only the default constructors are called in this instance and from within the function
     List<std::string> strList2 {makeList(200)};//due to NRVO, only the default constructors are called in this instance and from within the function
     List<std::string> strList3{};
  
     strList3 = makeList(100);//since already been constrcted, move assignment is called
 
-    strList2 = strList;//copy assigned
+    //strList2 = strList;//copy assigned
 
     List<std::string> strList4{strList3};//copy constructed using my copy assignment code
     List<std::string> strList5(makeList(300));//NRVO
@@ -89,6 +89,12 @@ int main()
     vec.push_back(makeList(200)); //move constructed
     vec.push_back(makeList(1000));//move constructed
     vec.push_back(strList5);      //copy constructed using my copy assignment code    
+
+    List<List<std::string>> lList{};
+    lList.push_back(makeList(1000));
+    lList.push_back(makeList(1000));
+    lList.push_back(makeList(1000));
+    std::cout << "lList.size() = " << lList.size() << std::endl;
     
     return 0;
 }

@@ -15,11 +15,10 @@ class List
 private:
     Node<T> *head;
     Node<T> *tail;
-    void *parent;
 
 public:
-    List(void *_parent = nullptr);
-    List(T _data, void *_parent = nullptr);
+    List();
+    List(T _data);
     List(const List& rhs);
     List(List&& rhs) noexcept;
     List& operator=(const List& rhs);
@@ -42,7 +41,7 @@ public:
     void remove(Iterator<T> &it);
 };
 template <typename T>
-List<T>::List(void *_parent) : parent{_parent}
+List<T>::List()
 {
     head = nullptr;
     tail = nullptr;
@@ -50,8 +49,8 @@ List<T>::List(void *_parent) : parent{_parent}
 }
 
 template <typename T>
-List<T>::List(T _data, void *_parent)
-    : head{new Node<T>{std::move(_data), nullptr, nullptr}}, parent{_parent}
+List<T>::List(T _data)
+    : head{new Node<T>{std::move(_data), nullptr, nullptr}}
 {
     tail = head;
     tail->next = new Node<T>;
@@ -102,7 +101,7 @@ List<T>& List<T>::operator=(List&& rhs) noexcept
 template <typename T>
 List<T>::~List()
 {
-    if (head != nullptr && parent == nullptr)
+    if (head != nullptr)
     {
         Node<T> *current = head;
 
